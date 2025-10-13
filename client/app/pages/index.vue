@@ -49,7 +49,7 @@ async function trainModel() {
 
 	try {
 		const res = await $fetch(
-			`${useRuntimeConfig().public.serverApi}/train`,
+			`${useRuntimeConfig().public.apiBase}/train`,
 			{
 				method: "POST",
 				body: {

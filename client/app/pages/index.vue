@@ -48,17 +48,20 @@ async function trainModel() {
 	result.value = null;
 
 	try {
-		const res = await $fetch("http://127.0.0.1:8000/train", {
-			method: "POST",
-			body: {
-				learning_rate: 0.001,
-				epochs: 1000,
-				intercept: 0,
-				slope: 0,
-				n_points: 50,
-				noise_std: 2.0,
-			},
-		});
+		const res = await $fetch(
+			`${useRuntimeConfig().public.serverApi}/train`,
+			{
+				method: "POST",
+				body: {
+					learning_rate: 0.001,
+					epochs: 1000,
+					intercept: 0,
+					slope: 0,
+					n_points: 50,
+					noise_std: 2.0,
+				},
+			}
+		);
 		result.value = res;
 		await nextTick();
 		drawChart(res);
@@ -87,7 +90,7 @@ function drawChart(data: any) {
 	const xExtent = d3.extent(data.points, (d: any) => d.x);
 	const xDomain: [number, number] = [
 		xExtent[0] !== undefined ? +xExtent[0] : 0,
-		xExtent[1] !== undefined ? +xExtent[1] : 1
+		xExtent[1] !== undefined ? +xExtent[1] : 1,
 	];
 	const x = d3
 		.scaleLinear()
@@ -97,7 +100,7 @@ function drawChart(data: any) {
 	const yExtent = d3.extent(data.points, (d: any) => d.y);
 	const yDomain: [number, number] = [
 		yExtent[0] !== undefined ? +yExtent[0] : 0,
-		yExtent[1] !== undefined ? +yExtent[1] : 1
+		yExtent[1] !== undefined ? +yExtent[1] : 1,
 	];
 	const y = d3
 		.scaleLinear()
@@ -148,7 +151,7 @@ function drawChart(data: any) {
 	const xExtentLine = d3.extent(data.points, (d: any) => d.x);
 	const xLine: [number, number] = [
 		xExtentLine[0] !== undefined ? +xExtentLine[0] : 0,
-		xExtentLine[1] !== undefined ? +xExtentLine[1] : 0
+		xExtentLine[1] !== undefined ? +xExtentLine[1] : 0,
 	];
 	const yLine = xLine.map(
 		(xi) => data.final_intercept + data.final_slope * xi

@@ -29,12 +29,6 @@ class GradientDescentRequest(BaseModel):
     noise_standard_deviation: float = Field(
         2.0, description="Standard deviation of noise for random data"
     )
-    true_intercept: float = Field(
-        2.0, description="True intercept used when generating random data"
-    )
-    true_slope: float = Field(
-        3.0, description="True slope used when generating random data"
-    )
 
 
 class Dataset(TypedDict):

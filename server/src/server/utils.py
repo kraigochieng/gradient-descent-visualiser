@@ -20,14 +20,14 @@ def derivative_of_slope(x: float, y: float, intercept: float, slope: float) -> f
 
 
 def generate_random_linear_data(
-    number_of_points: int = 30,
-    true_intercept: float = 2.0,
-    true_slope: float = 3.0,
-    noise_standard_deviation: float = 2.0,
-    seed: int = 42,
+    number_of_points: int,
+    noise_standard_deviation: float,
+    true_intercept: float,
+    true_slope: float,
 ) -> Dataset:
     """Generate synthetic linear data with Gaussian noise."""
-    np.random.seed(seed)
+    np.random.seed(42)
+    
     x = np.linspace(0, 10, number_of_points)
     noise = np.random.normal(0, noise_standard_deviation, size=number_of_points)
 

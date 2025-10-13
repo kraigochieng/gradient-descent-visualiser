@@ -9,6 +9,7 @@ from fastapi.responses import JSONResponse
 from server.basemodels import GradientDescentRequest, Point
 from server.settings import settings
 from server.utils import generate_random_linear_data, gradient_descent, sanitize_float
+import random
 
 app = FastAPI()
 
@@ -24,8 +25,13 @@ app.add_middleware(
 @app.post("/train")
 def train_model(request: GradientDescentRequest):
     if not request.points:
+        true_intercept = random.uniform(-5, 5)
+        true_slope = random.uniform(-10, 10)
+
         data = generate_random_linear_data(
             number_of_points=request.number_of_points,
+            true_intercept=true_intercept,
+            true_slope=true_slope,
             noise_standard_deviation=request.noise_standard_deviation,
         )
 
@@ -66,6 +72,8 @@ def train_model(request: GradientDescentRequest):
     # plt.legend()
     # plt.show()
 
+    points: list[Point] = [Point(x=float(xi), y=float(yi)) for xi, yi in zip(x, y)]
+
     content = {
         "initial_intercept": request.intercept,
         "initial_slope": request.slope,
@@ -75,6 +83,7 @@ def train_model(request: GradientDescentRequest):
         "number_of_points": len(x),
         "x_mean": float(np.mean(x)),
         "y_mean": float(np.mean(y)),
+        "points": points,
         "epochs": result["epochs"],
     }
     return JSONResponse(content=jsonable_encoder(content))

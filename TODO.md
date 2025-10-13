@@ -6,6 +6,11 @@
 
 # In Progress
 
--   [ ]decide what is to be on frontend first
+]
+
+-   [ ] decide what is to be on frontend first
+-   [ ] understand index page
+-   [ ] update readme
+-   [ ] add render hook
 
 # Done

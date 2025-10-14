@@ -1,58 +1,263 @@
 <template>
-	<div class="p-8 space-y-8">
-		<h1 class="text-2xl font-bold">Gradient Descent Visualizer</h1>
+	<h1 class="text-2xl font-bold my-8">Gradient Descent Visualizer</h1>
+	<UForm :schema="schema" :state="form" @submit="onSubmit" class="space-y-8">
+		<UCard>
+			<template #header>
+				<div class="flex items-center gap-2">
+					<UIcon name="i-lucide-brain" class="text-primary" />
+					<span class="font-semibold">
+						Training Hyperparameters
+					</span>
+				</div>
+			</template>
+			<template #default>
+				<UFormField
+					label="Learning Rate"
+					name="learning_rate"
+					size="xl"
+					class="form-field-wrapper"
+					required
+				>
+					<UInputNumber
+						placeholder="Enter Learning Rate"
+						v-model="form.learning_rate"
+						:step="0.001"
+						:min="0.001"
+						:max="0.1"
+						class="input-wrapper"
+					/>
+				</UFormField>
 
-		<div class="flex gap-4 items-center">
-			<UButton :loading="loading" @click="trainModel">
-				{{ loading ? "Training..." : "Run Gradient Descent" }}
-			</UButton>
-		</div>
+				<UFormField
+					label="Epochs"
+					name="epochs"
+					size="xl"
+					required
+					class="form-field-wrapper"
+				>
+					<UInputNumber
+						placeholder="Enter Epochs"
+						v-model="form.epochs"
+						:step="10"
+						:min="10"
+						:max="1000"
+						class="input-wrapper"
+					/>
+				</UFormField>
+			</template>
+		</UCard>
 
-		<div v-if="result" class="space-y-1 text-sm">
-			<p>
-				<strong>Initial Intercept:</strong>
-				{{ result.initial_intercept.toFixed(3) }}
-			</p>
-			<p>
-				<strong>Initial Slope:</strong>
-				{{ result.initial_slope.toFixed(3) }}
-			</p>
-			<p>
-				<strong>Final Intercept:</strong>
-				{{ result.final_intercept.toFixed(3) }}
-			</p>
-			<p>
-				<strong>Final Slope:</strong>
-				{{ result.final_slope.toFixed(3) }}
-			</p>
-			<p>
-				<strong>Final Loss:</strong> {{ result.final_loss.toFixed(3) }}
-			</p>
-			<p><strong>Points:</strong> {{ result.number_of_points }}</p>
-		</div>
+		<UFormField
+			label="Choose Data Source"
+			size="xl"
+			class="form-field-wrapper mx-auto"
+		>
+			<URadioGroup
+				v-model="dataSourceValue"
+				color="primary"
+				variant="table"
+				default-value="random"
+				orientation="horizontal"
+				class="w-full mx-auto"
+				:items="dataSourceItems"
+			/>
+		</UFormField>
 
-		<div ref="chart" class="w-full h-[500px] border rounded-lg"></div>
+		<Transition>
+			<UCard v-if="dataSourceValue == 'custom'">
+				<UFormField
+					label="CSV Points (optional)"
+					class="form-field-wrapper"
+				>
+					<!-- <UInput
+						type="file"
+						accept=".csv"
+						@change="handleFileUpload"
+					/> -->
+					<UFileUpload
+						v-model="csvFile"
+						accept=".csv"
+						@change="handleFileUpload"
+						:multiple="false"
+						description="Upload a CSV with x,y columns"
+					/>
+					<p
+						v-if="csvPoints.length"
+						class="text-sm text-gray-500 mt-2"
+					>
+						Loaded {{ csvPoints.length }} points from CSV
+					</p>
+				</UFormField>
+			</UCard>
+		</Transition>
+
+		<Transition>
+			<UCard v-if="dataSourceValue == 'random'">
+				<UFormField
+					label="Number of Points"
+					name="number_of_points"
+					size="xl"
+					class="form-field-wrapper"
+				>
+					<UInputNumber
+						v-model="form.number_of_points"
+						:step="25"
+						:min="50"
+						:max="1000"
+						class="input-wrapper"
+					/>
+				</UFormField>
+
+				<UFormField
+					label="Noise Std Dev"
+					name="noise_standard_deviation"
+					size="xl"
+					class="form-field-wrapper"
+				>
+					<UInputNumber
+						v-model="form.noise_standard_deviation"
+						:min="1"
+						:max="5"
+						:step="0.1"
+						class="input-wrapper"
+					/>
+				</UFormField>
+			</UCard>
+		</Transition>
+
+		<!-- <UFormField label="Intercept" name="intercept">
+				<UInput v-model.number="form.intercept" type="number" />
+			</UFormField>
+
+			<UFormField label="Slope" name="slope">
+				<UInput v-model.number="form.slope" type="number" />
+			</UFormField> -->
+
+		<UButton type="submit" :loading="loading" class="w-full justify-center">
+			{{ loading ? "Training..." : "Run Gradient Descent" }}
+		</UButton>
+	</UForm>
+	<div v-if="result" class="space-y-1 text-sm">
+		<p>
+			<strong>Initial Intercept:</strong>
+			{{ result.initial_intercept.toFixed(3) }}
+		</p>
+		<p>
+			<strong>Initial Slope:</strong>
+			{{ result.initial_slope.toFixed(3) }}
+		</p>
+		<p>
+			<strong>Final Intercept:</strong>
+			{{ result.final_intercept.toFixed(3) }}
+		</p>
+		<p>
+			<strong>Final Slope:</strong>
+			{{ result.final_slope.toFixed(3) }}
+		</p>
+		<p><strong>Final Loss:</strong> {{ result.final_loss.toFixed(3) }}</p>
+		<p><strong>Points:</strong> {{ result.number_of_points }}</p>
 	</div>
+
+	<div ref="chart" class="w-full my-4 h-[500px] border rounded-lg"></div>
 </template>
 
 <script setup lang="ts">
+import { gradientDescentSchema } from "@/schemas/gradientDescent";
+import type { GradientDescentResponse } from "@/types";
 import * as d3 from "d3";
-import type { GradientDescentResponse } from "~/types";
+import Papa from "papaparse";
+
+import type { RadioGroupItem } from "@nuxt/ui";
+import type { z } from "zod";
+
+type GradientDescentRequest = z.infer<typeof gradientDescentSchema>;
+
+const schema = gradientDescentSchema;
 
 const loading = ref(false);
 const result = ref<any>(null);
+
 const chart = ref<HTMLDivElement | null>(null);
 
-async function trainModel() {
+const csvPoints = ref<{ x: number; y: number }[]>([]);
+const csvFile = ref<File | null>(null);
+
+const form = reactive<Partial<GradientDescentRequest>>({
+	learning_rate: 0.001,
+	epochs: 1000,
+	intercept: Math.floor(Math.random() * (10 - -10 + 1)) + -10,
+	slope: Math.floor(Math.random() * (5 - -5 + 1)) + -5,
+	number_of_points: Math.floor(Math.random() * (1000 - 50 + 1)) + 50,
+	noise_standard_deviation: 2.0,
+	points: undefined,
+});
+
+const dataSourceValue = ref<"custom" | "random">("random");
+const dataSourceItems = ref<RadioGroupItem[]>([
+	{
+		label: "Custom",
+		value: "custom",
+		description: "Upload data in a .CSV file with two columns x and y",
+		// disabled: true,
+	},
+	{
+		label: "Random",
+		value: "random",
+		description: "Data is randomly generated in the backend",
+	},
+]);
+// async function handleFileUpload(event: Event) {
+// 	const file = (event.target as HTMLInputElement).files?.[0];
+// 	if (!file) return;
+
+// 	Papa.parse(file, {
+// 		header: true,
+// 		dynamicTyping: true,
+// 		skipEmptyLines: true,
+// 		complete: (results) => {
+// 			const data = results.data as { x: number; y: number }[];
+// 			csvPoints.value = data.filter(
+// 				(row) => typeof row.x === "number" && typeof row.y === "number"
+// 			);
+// 			form.value.points = csvPoints.value;
+// 		},
+// 	});
+// }
+
+function handleFileUpload() {
+	const file = csvFile.value;
+	if (!file) return;
+
+	Papa.parse(file, {
+		header: true,
+		transformHeader: (header) => {
+			return header.trim().toLowerCase();
+		},
+		dynamicTyping: true,
+		skipEmptyLines: true,
+		complete: (results) => {
+			const data = results.data as { x: number; y: number }[];
+			csvPoints.value = data.filter(
+				(row) => typeof row.x === "number" && typeof row.y === "number"
+			);
+			form.points = csvPoints.value;
+		},
+	});
+}
+async function onSubmit() {
 	loading.value = true;
 	result.value = null;
+
+	if (dataSourceValue.value == "random") {
+		form.points = undefined;
+	}
 
 	try {
 		const res = await $fetch<GradientDescentResponse>(
 			`${useRuntimeConfig().public.apiBase}/train`,
 			{
 				method: "POST",
-				body: {}, // Randomised answer
+				body: form, // Randomised answer
 			}
 		);
 		result.value = res;
@@ -163,3 +368,15 @@ function drawChart(data: GradientDescentResponse) {
 	svg.append("g").call(yAxis);
 }
 </script>
+
+<style scoped>
+@reference "assets/css/main.css";
+
+.form-field-wrapper {
+	@apply space-y-4;
+}
+
+.input-wrapper {
+	@apply w-full space-y-2;
+}
+</style>

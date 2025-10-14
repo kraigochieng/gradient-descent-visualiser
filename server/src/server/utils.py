@@ -29,7 +29,7 @@ def generate_random_linear_data(
 ) -> Dataset:
     """Generate synthetic linear data with Gaussian noise."""
     np.random.seed(42)
-    
+
     x = np.linspace(0, 10, number_of_points)
     noise = np.random.normal(0, noise_standard_deviation, size=number_of_points)
 
@@ -44,12 +44,25 @@ def sanitize_float(value: float) -> float:
     return float(value)
 
 
+def sanitize_obj(obj):
+    """Recursively clean NaN/inf values from dicts, lists, or floats."""
+    if isinstance(obj, dict):
+        return {k: sanitize_obj(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [sanitize_obj(v) for v in obj]
+    elif isinstance(obj, float):
+        return sanitize_float(obj)
+    else:
+        return obj
+
+
 def ping_self():
     try:
         requests.get(settings.nuxt_public_api_base, timeout=5)
         print("Pinged self ✅")
     except Exception as e:
         print("Ping failed ❌", e)
+
 
 def gradient_descent(
     x: np.array,

@@ -17,6 +17,7 @@ from server.utils import (
     gradient_descent,
     ping_self,
     sanitize_float,
+    sanitize_obj,
 )
 
 
@@ -112,4 +113,8 @@ def train_model(request: GradientDescentRequest):
         "points": points,
         "epochs": result["epochs"],
     }
-    return JSONResponse(content=jsonable_encoder(content))
+
+    # return JSONResponse(content=jsonable_encoder(content))
+    safe_content = sanitize_obj(content)
+
+    return JSONResponse(content=jsonable_encoder(safe_content))

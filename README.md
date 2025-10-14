@@ -57,6 +57,7 @@ uv pip install --system -r pyproject.toml
 #### Run the server
 
 ```sh
+cd server
 uvicorn server.main:app --app-dir src --host 0.0.0.0 --port 8000
 ```
 

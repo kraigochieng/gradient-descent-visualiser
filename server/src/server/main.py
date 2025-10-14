@@ -54,13 +54,10 @@ def index():
 @app.post("/train")
 def train_model(request: GradientDescentRequest):
     if not request.points:
-        true_intercept = random.uniform(-5, 5)
-        true_slope = random.uniform(-10, 10)
-
         data = generate_random_linear_data(
             number_of_points=request.number_of_points,
-            true_intercept=true_intercept,
-            true_slope=true_slope,
+            true_intercept=request.intercept,
+            true_slope=request.slope,
             noise_standard_deviation=request.noise_standard_deviation,
         )
 

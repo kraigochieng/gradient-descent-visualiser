@@ -36,8 +36,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watch, nextTick } from "vue";
+
 import * as d3 from "d3";
+import type { GradientDescentResponse } from "~/types";
 
 const loading = ref(false);
 const result = ref<any>(null);
@@ -48,7 +49,7 @@ async function trainModel() {
 	result.value = null;
 
 	try {
-		const res = await $fetch(
+		const res = await $fetch<GradientDescentResponse>(
 			`${useRuntimeConfig().public.apiBase}/train`,
 			{
 				method: "POST",
@@ -72,7 +73,7 @@ async function trainModel() {
 	}
 }
 
-function drawChart(data: any) {
+function drawChart(data: GradientDescentResponse) {
 	if (!chart.value) return;
 
 	chart.value.innerHTML = ""; // Clear previous chart
@@ -159,9 +160,9 @@ function drawChart(data: any) {
 
 	svg.append("line")
 		.attr("x1", x(xLine[0]))
-		.attr("y1", y(yLine[0]))
+		.attr("y1", y(yLine[0] ?? 0))
 		.attr("x2", x(xLine[1]))
-		.attr("y2", y(yLine[1]))
+		.attr("y2", y(yLine[1] ?? 0))
 		.attr("stroke", "#ef4444")
 		.attr("stroke-width", 2);
 

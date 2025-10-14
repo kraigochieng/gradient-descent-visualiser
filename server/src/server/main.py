@@ -1,6 +1,10 @@
+import random
+from contextlib import asynccontextmanager
+
 import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
+from apscheduler.schedulers.background import BackgroundScheduler
 from fastapi import FastAPI
 from fastapi.encoders import jsonable_encoder
 from fastapi.middleware.cors import CORSMiddleware
@@ -8,10 +12,30 @@ from fastapi.responses import JSONResponse
 
 from server.basemodels import GradientDescentRequest, Point
 from server.settings import settings
-from server.utils import generate_random_linear_data, gradient_descent, sanitize_float
-import random
+from server.utils import (
+    generate_random_linear_data,
+    gradient_descent,
+    ping_self,
+    sanitize_float,
+)
 
-app = FastAPI()
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Scheduler to keep app alive
+    scheduler = BackgroundScheduler()
+    scheduler.add_job(ping_self, "interval", minutes=5)  # every 10 min
+    scheduler.start()
+
+    print("Scheduler started")
+
+    yield
+
+    scheduler.shutdown()
+    print("Scheduler stopped")
+
+
+app = FastAPI(lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
@@ -20,6 +44,11 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+@app.get("/")
+def index():
+    return {"message": "Gradient Descent Visualiser up"}
 
 
 @app.post("/train")

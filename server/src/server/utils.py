@@ -1,8 +1,10 @@
 import math
 
 import numpy as np
+import requests
 
 from server.basemodels import Dataset, EpochRecord, GradientDescentResult
+from server.settings import settings
 
 
 def squared_residual(x: float, y: float, intercept: float, slope: float) -> float:
@@ -41,6 +43,13 @@ def sanitize_float(value: float) -> float:
         return 0.0
     return float(value)
 
+
+def ping_self():
+    try:
+        requests.get(settings.nuxt_public_api_base, timeout=5)
+        print("Pinged self ✅")
+    except Exception as e:
+        print("Ping failed ❌", e)
 
 def gradient_descent(
     x: np.array,

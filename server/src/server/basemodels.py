@@ -1,3 +1,4 @@
+import random
 from typing import List, Optional, TypedDict
 
 import numpy as np
@@ -18,10 +19,16 @@ class GradientDescentRequest(BaseModel):
         0.001, description="Gradient descent step size (learning rate)"
     )
     epochs: int = Field(1000, description="Number of training epochs")
-    intercept: float = Field(0.0, description="Initial intercept value")
-    slope: float = Field(0.0, description="Initial slope value")
+    intercept: float = Field(
+        default_factory=lambda: random.uniform(-5, 5),
+        description="Initial intercept value (random between -5 and 5)",
+    )
+    slope: float = Field(
+        default_factory=lambda: random.uniform(-10, 10),
+        description="Initial slope value (random between -10 and 10)",
+    )
     number_of_points: int = Field(
-        50,
+        default_factory=lambda: random.randint(50, 1000),
         # ge=50,
         le=1000,
         description="Number of random points to generate if not provided",

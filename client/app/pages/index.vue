@@ -36,7 +36,6 @@
 </template>
 
 <script setup lang="ts">
-
 import * as d3 from "d3";
 import type { GradientDescentResponse } from "~/types";
 
@@ -53,14 +52,7 @@ async function trainModel() {
 			`${useRuntimeConfig().public.apiBase}/train`,
 			{
 				method: "POST",
-				body: {
-					learning_rate: 0.001,
-					epochs: 1000,
-					intercept: 0,
-					slope: 0,
-					n_points: 50,
-					noise_std: 2.0,
-				},
+				body: {}, // Randomised answer
 			}
 		);
 		result.value = res;

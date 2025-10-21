@@ -24,16 +24,16 @@ from server.utils import (
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Scheduler to keep app alive
-    scheduler = BackgroundScheduler()
-    scheduler.add_job(ping_self, "interval", minutes=5)  # every 10 min
-    scheduler.start()
+    # scheduler = BackgroundScheduler()
+    # scheduler.add_job(ping_self, "interval", minutes=5)  # every 10 min
+    # scheduler.start()
 
-    print("Scheduler started")
+    # print("Scheduler started")
 
     yield
 
-    scheduler.shutdown()
-    print("Scheduler stopped")
+    # scheduler.shutdown()
+    # print("Scheduler stopped")
 
 
 app = FastAPI(lifespan=lifespan)

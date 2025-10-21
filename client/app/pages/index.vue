@@ -163,7 +163,7 @@
 
 <script setup lang="ts">
 import { gradientDescentSchema } from "@/schemas/gradientDescent";
-import type { GradientDescentResponse } from "@/types";
+import type { GradientDescentResponse, Point } from "@/types";
 import * as d3 from "d3";
 import Papa from "papaparse";
 
@@ -339,14 +339,14 @@ function drawChart(data: GradientDescentResponse) {
 		.selectAll("circle")
 		.data(data.points)
 		.join("circle")
-		.attr("cx", (d: any) => x(d.x))
-		.attr("cy", (d: any) => y(d.y))
+		.attr("cx", (d: Point) => x(d.x))
+		.attr("cy", (d: Point) => y(d.y))
 		.attr("r", 4)
 		.attr("fill", "#3b82f6")
 		.attr("opacity", 0.8);
 
 	// Regression line
-	const xExtentLine = d3.extent(data.points, (d: any) => d.x);
+	const xExtentLine = d3.extent(data.points, (d: Point) => d.x);
 	const xLine: [number, number] = [
 		xExtentLine[0] !== undefined ? +xExtentLine[0] : 0,
 		xExtentLine[1] !== undefined ? +xExtentLine[1] : 0,

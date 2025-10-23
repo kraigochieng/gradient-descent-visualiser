@@ -4,7 +4,7 @@ export interface Point {
 	y: number;
 }
 
-export interface EpochData {
+export interface Epoch {
 	epoch: number;
 	intercept: number;
 	slope: number;
@@ -21,5 +21,5 @@ export interface GradientDescentResponse {
 	x_mean: number;
 	y_mean: number;
 	points: Point[];
-	epochs: EpochData[];
+	epochs: Epoch[];
 }

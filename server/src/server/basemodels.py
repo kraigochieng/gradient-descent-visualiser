@@ -20,11 +20,13 @@ class GradientDescentRequest(BaseModel):
     )
     epochs: int = Field(1000, description="Number of training epochs")
     intercept: float = Field(
-        default_factory=lambda: random.uniform(-5, 5),
+        default_factory=lambda: random.uniform(-10, 10),
+        # default=0,
         description="Initial intercept value (random between -5 and 5)",
     )
     slope: float = Field(
-        default_factory=lambda: random.uniform(-10, 10),
+        default_factory=lambda: random.uniform(-20, 20),
+        # default=0,
         description="Initial slope value (random between -10 and 10)",
     )
     number_of_points: int = Field(

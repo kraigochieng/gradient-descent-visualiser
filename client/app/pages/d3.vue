@@ -24,12 +24,15 @@
 		<g class="chart"></g>
 		<g class="cities"></g>
 	</svg> -->
-	<UButton @click="cities.push({ name: 'kenya', population: 1000000 })">
+	<!-- <UButton @click="cities.push({ name: 'kenya', population: 1000000 })">
 		Append
 	</UButton>
 	<svg width="800" height="800">
 		<g class="bars" transform="translate(70, 30)"></g>
 		<g class="labels" transform="translate(66, 30)"></g>
+	</svg> -->
+	<svg id="entering" width="800" height="800">
+		<g transform="translate(70, 30)"></g>
 	</svg>
 </template>
 
@@ -148,6 +151,29 @@ onMounted(() => {
 		});
 
 	renderBars();
+
+	d3.select("#entering g")
+		.selectAll("circle")
+		.data(myData)
+		.join(
+			(enter) =>
+				enter
+					.append("circle")
+					.style("opacity", 0)
+					.style("fill", "orange")
+					.attr("r", 50)
+					.attr("cx", (d, i) => i * 100)
+					.attr("cy", 50),
+			(update) => update.style("opacity", 1).style("fill", "red"),
+			(exit) => exit.transition().attr("cy", 500).remove()
+		)
+		.transition()
+		.duration(1000)
+		.style("opacity", 1)
+		.attr("r", (d, i) => 0.5 * d);
+
+	// .transition()
+	// .delay((d, i) => i * 75)
 
 	// .call(colorAll);
 

@@ -120,3 +120,11 @@ JSON object containing:
 -   The backend is CORS-enabled for the frontend URL specified in the environment.
 -   All numeric outputs are sanitized to avoid NaN/Infinity.
 -   The backend is designed for educational and visualization purposes.
+
+---
+
+## Challenges
+
+-   When creating the random linear data, ensuring that it is random enough and not too random from the initial intercept and slope.
+    -   When not too random, hard to visualise the gradient descent.
+    -   When too random, hard to calculate

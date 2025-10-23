@@ -5,9 +5,11 @@ export default defineNuxtConfig({
 	devtools: { enabled: false },
 	runtimeConfig: {
 		public: {
-			apiBase: process.env.NUXT_PUBLIC_API_BASE || 'http://localhost:8000',
-		}
+			apiBase:
+				process.env.NUXT_PUBLIC_API_BASE || "http://localhost:8000",
+		},
 	},
+
 	css: ["~/assets/css/main.css"],
 	modules: ["@nuxt/ui"],
 	vite: {

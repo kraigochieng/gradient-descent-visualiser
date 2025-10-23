@@ -24,11 +24,15 @@ def derivative_of_slope(x: float, y: float, intercept: float, slope: float) -> f
 def generate_random_linear_data(
     number_of_points: int,
     noise_standard_deviation: float,
-    true_intercept: float,
-    true_slope: float,
 ) -> Dataset:
     """Generate synthetic linear data with Gaussian noise."""
     np.random.seed(42)
+
+    rng = np.random.default_rng()  # Modern random number generator
+
+    # 1. Generate the random "Ground Truth" parameters internally
+    true_slope = rng.uniform(-10.0, 10.0)
+    true_intercept = rng.uniform(-20.0, 20.0)
 
     x = np.linspace(0, 10, number_of_points)
     noise = np.random.normal(0, noise_standard_deviation, size=number_of_points)

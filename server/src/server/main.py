@@ -57,8 +57,6 @@ def train_model(request: GradientDescentRequest):
     if not request.points:
         data = generate_random_linear_data(
             number_of_points=request.number_of_points,
-            true_intercept=request.intercept,
-            true_slope=request.slope,
             noise_standard_deviation=request.noise_standard_deviation,
         )
 
@@ -84,8 +82,8 @@ def train_model(request: GradientDescentRequest):
     result = gradient_descent(
         x=x,
         y=y,
-        intercept=request.intercept,
-        slope=request.slope,
+        intercept=request.intercept * random.uniform(0.5, 1.0) * -1,
+        slope=request.slope * random.uniform(0.5, 1.0) * 1,
         learning_rate=request.learning_rate,
         epochs=request.epochs,
     )

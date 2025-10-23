@@ -130,7 +130,7 @@
 				<UButton
 					class="w-full justify-center my-4"
 					@mouseup="handleRandomise"
-					variant="neutral"
+					variant="subtle"
 					>Randomise
 				</UButton>
 			</UCard>

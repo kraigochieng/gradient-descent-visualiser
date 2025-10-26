@@ -3,6 +3,9 @@
 -   [ ] mobile responsiveness
 -   [ ] validate if CSV has the headers allowed
 -   [ ] add favicon
+-   [ ] add about page
+    -   add the equation for slope and intercept
+    -   explain the gradient descent process on you own words
 
 # In Progress
 

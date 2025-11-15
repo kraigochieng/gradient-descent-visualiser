@@ -1,10 +1,13 @@
 # Gradient Descent Visualiser
 
+
 **An Interactive Learning Tool for Aspiring Data Scientists**
 
 > **"I wish I had this when I was learning ML."**  
 > — Every data scientist, _after_ struggling with gradient descent for the first time.
 
+
+![Demo](docs/images/gradient_descent_recording.gif)
 ## The Problem: Gradient Descent is Hard to _See_
 
 Most beginners **read** about gradient descent — but never truly **see** it.

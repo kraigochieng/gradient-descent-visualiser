@@ -1,16 +1,52 @@
 # Gradient Descent Visualiser
 
-A web application for visualizing linear regression using gradient descent. The project consists of a Nuxt-based frontend and a FastAPI backend, allowing users to generate synthetic data, run gradient descent, and visualize the results interactively.
+**An Interactive Learning Tool for Aspiring Data Scientists**
+
+> **"I wish I had this when I was learning ML."**  
+> — Every data scientist, _after_ struggling with gradient descent for the first time.
+
+## The Problem: Gradient Descent is Hard to _See_
+
+Most beginners **read** about gradient descent — but never truly **see** it.
+
+-   **Textbook formulas** don’t show _how_ the model learns
+-   **Static plots** hide the step-by-step optimization journey
+-   **Abstract math** scares off visual learners
+-   **No feedback loop** → slow understanding, high dropout
+
+> **Result**: Thousands of aspiring data scientists get stuck at the _first_ core ML concept.
+
+## The Solution: **See. Tweak. Learn.**
+
+**Gradient Descent Visualizer** is a **full-stack web app** that lets you:
+
+| Action                  | Learning Outcome                     |
+| ----------------------- | ------------------------------------ |
+| Generate synthetic data | Understand noise, bias, variance     |
+| Adjust learning rate    | See convergence vs. divergence       |
+| Watch cost curve drop   | Grasp loss minimization in real time |
+| Step through epochs     | Internalize iterative learning       |
+
+> **One interactive session = 10 hours of theory**
 
 ---
 
-## Features
+## Key Features (Built for Learning)
 
--   **Interactive Visualization:** Visualize the process of fitting a linear model to data using gradient descent.
--   **Synthetic Data Generation:** Generate random linear data with configurable noise.
--   **Custom Parameters:** Adjust learning rate, number of epochs, initial intercept, slope, and noise.
--   **API-Driven:** Backend exposes endpoints for training and data generation.
--   **Modern Stack:** Nuxt 3 (Vue 3, TypeScript, Tailwind CSS) frontend and FastAPI (Python) backend.
+-   **Real-time D3.js Animations**  
+    Watch the regression line _dance_ toward the best fit
+
+-   **Cost Function Graph**  
+    See loss plummet (or explode!) with each epoch
+
+-   **Parameter Sliders**  
+    Learning rate, epochs, initial weights, noise — full control
+
+-   **Step-by-Step Mode**  
+    Pause, replay, inspect every update
+
+-   **Exportable Results**  
+    Download data, model, and animation as JSON/PNG
 
 ---
 
@@ -34,7 +70,7 @@ A web application for visualizing linear regression using gradient descent. The 
 
 ---
 
-## Getting Started
+## Getting Started (Local Dev)
 
 ### Prerequisites
 

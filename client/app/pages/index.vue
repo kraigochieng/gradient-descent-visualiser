@@ -1,5 +1,9 @@
 <template>
-	<h1>Gradient Descent Visualizer</h1>
+	<div class="flex space-x-2">
+		<UIcon name="i-material-symbols-gradient-outline" class="size-8" />
+		<h1 class="tracking-wide">Gradient Descent Visualizer</h1>
+	</div>
+
 	<UForm :schema="schema" :state="form" @submit="onSubmit" class="space-y-8">
 		<UCard>
 			<template #header>
@@ -15,7 +19,7 @@
 					label="Learning Rate"
 					name="learning_rate"
 					description="How much the slope and intercept will be adjusted"
-					size="xl"
+					color="primary"
 					class="form-field-wrapper"
 					required
 				>
@@ -33,7 +37,6 @@
 					label="Epochs"
 					name="epochs"
 					description="The number of times the algorithm will run"
-					size="xl"
 					required
 					class="form-field-wrapper"
 				>
@@ -52,7 +55,6 @@
 		<div class="flex justify-center">
 			<UFormField
 				label="Choose Data Source"
-				size="xl"
 				class="form-field-wrapper mx-auto"
 			>
 				<URadioGroup
@@ -97,42 +99,53 @@
 
 		<Transition>
 			<UCard v-if="dataSourceValue == 'random'">
-				<UFormField
-					label="Number of Points"
-					name="number_of_points"
-					size="xl"
-					class="form-field-wrapper"
-				>
-					<UInputNumber
-						v-model="form.number_of_points"
-						:step="25"
-						:min="50"
-						:max="1000"
-						class="input-wrapper"
-					/>
-				</UFormField>
+				<template #header>
+					<div class="flex items-center gap-2">
+						<UIcon
+							name="i-lucide-drafting-compass"
+							class="text-primary"
+						/>
+						<span class="font-semibold"> Data Parameters </span>
+					</div>
+				</template>
+				<template #default>
+					<UFormField
+						label="Number of Points"
+						name="number_of_points"
+						class="form-field-wrapper"
+					>
+						<UInputNumber
+							v-model="form.number_of_points"
+							:step="25"
+							:min="50"
+							:max="1000"
+							class="input-wrapper"
+						/>
+					</UFormField>
 
-				<UFormField
-					label="Noise Std Dev"
-					name="noise_standard_deviation"
-					size="xl"
-					class="form-field-wrapper"
-				>
-					<UInputNumber
-						v-model="form.noise_standard_deviation"
-						:min="1"
-						:max="5"
-						:step="0.1"
-						class="input-wrapper"
-					/>
-				</UFormField>
+					<UFormField
+						label="Noise Std Dev"
+						name="noise_standard_deviation"
+						class="form-field-wrapper"
+					>
+						<UInputNumber
+							v-model="form.noise_standard_deviation"
+							:min="1"
+							:max="5"
+							:step="0.1"
+							class="input-wrapper"
+						/>
+					</UFormField>
 
-				<UButton
-					class="w-full justify-center my-4"
-					@mouseup="handleRandomise"
-					variant="subtle"
-					>Randomise
-				</UButton>
+					<UButton
+						class="w-full justify-center my-4"
+						@mouseup="handleRandomise"
+						variant="subtle"
+						color="secondary"
+					>
+						Randomise
+					</UButton>
+				</template>
 			</UCard>
 		</Transition>
 
@@ -144,19 +157,31 @@
 				<UInput v-model.number="form.slope" type="number" />
 			</UFormField> -->
 
-		<UButton type="submit" :loading="loading" class="w-full justify-center">
+		<UButton
+			type="submit"
+			:loading="loading"
+			class="w-full justify-center"
+			color="secondary"
+		>
 			{{ loading ? "Training..." : "Run Gradient Descent" }}
 		</UButton>
 	</UForm>
-	<UTable v-if="result" :columns="resultColumns" :data="resultRows" />
-
 	<div ref="chart" id="chart" class="w-full my-4 h-[500px] shadow-lg"></div>
+	<UTable v-if="result" :columns="resultColumns" :data="resultRows" />
+	<!-- <UTabs v-if="result" :items="resultTabItems" :unmount-on-hide="false">
+		<template #graph>
+			
+		</template>
+		<template #data>
+			
+		</template>
+	</UTabs> -->
 </template>
 
 <script setup lang="ts">
 import { gradientDescentSchema } from "@/schemas/gradientDescent";
 import type { Epoch, GradientDescentResponse, Point } from "@/types";
-import type { RadioGroupItem } from "@nuxt/ui";
+import type { RadioGroupItem, TabsItem } from "@nuxt/ui";
 import type { ColumnDef } from "@tanstack/vue-table";
 
 import * as d3 from "d3";
@@ -182,6 +207,17 @@ const chart = ref<HTMLDivElement | null>(null);
 
 const csvPoints = ref<{ x: number; y: number }[]>([]);
 const csvFile = ref<File | null>(null);
+
+const resultTabItems = ref<TabsItem[]>([
+	{
+		label: "Graph",
+		slot: "graph",
+	},
+	{
+		label: "Experiment Output",
+		graph: "data",
+	},
+]);
 
 const form = reactive<Partial<GradientDescentRequest>>({
 	learning_rate: 0.001,

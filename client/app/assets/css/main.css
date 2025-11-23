@@ -1,6 +1,53 @@
 @import "tailwindcss";
 @import "@nuxt/ui";
 
+@theme static {
+	--color-palette-cornflower-50: #e1e5ef;
+	--color-palette-cornflower-100: #c3ccdf;
+	--color-palette-cornflower-200: #869cc2;
+	--color-palette-cornflower-300: #5c6e8c;
+	--color-palette-cornflower-400: #374356;
+	--color-palette-cornflower-500: #151b25;
+	--color-palette-cornflower-600: #121821;
+	--color-palette-cornflower-700: #0f141c;
+	--color-palette-cornflower-800: #0a0e15;
+	--color-palette-cornflower-900: #05070c;
+	--color-palette-cornflower-950: #030406;
+	--color-palette-navy-blue-50: #e4ebff;
+	--color-palette-navy-blue-100: #c7d7ff;
+	--color-palette-navy-blue-200: #89b0fe;
+	--color-palette-navy-blue-300: #218bfe;
+	--color-palette-navy-blue-400: #0768c3;
+	--color-palette-navy-blue-500: #034687;
+	--color-palette-navy-blue-600: #023970;
+	--color-palette-navy-blue-700: #012c59;
+	--color-palette-navy-blue-800: #011f43;
+	--color-palette-navy-blue-900: #00132d;
+	--color-palette-navy-blue-950: #000b1e;
+	--color-palette-baby-blue-50: #fbfcfc;
+	--color-palette-baby-blue-100: #f7faf8;
+	--color-palette-baby-blue-200: #f0f5f2;
+	--color-palette-baby-blue-300: #ecf2ef;
+	--color-palette-baby-blue-400: #e4ede8;
+	--color-palette-baby-blue-500: #dbe8e1;
+	--color-palette-baby-blue-600: #aab6af;
+	--color-palette-baby-blue-700: #7c8681;
+	--color-palette-baby-blue-800: #505653;
+	--color-palette-baby-blue-900: #292d2b;
+	--color-palette-baby-blue-950: #181a19;
+	--color-palette-red-50: #ffeced;
+	--color-palette-red-100: #ffd6d8;
+	--color-palette-red-200: #ffaeb3;
+	--color-palette-red-300: #ff7e87;
+	--color-palette-red-400: #ff4357;
+	--color-palette-red-500: #e10032;
+	--color-palette-red-600: #b60026;
+	--color-palette-red-700: #8a001b;
+	--color-palette-red-800: #640011;
+	--color-palette-red-900: #3d0006;
+	--color-palette-red-950: #2c0004;
+}
+
 @layer base {
 	h1 {
 		@apply scroll-m-20 my-8 text-4xl font-extrabold tracking-tight text-balance;
@@ -21,4 +68,12 @@
 	h5 {
 		@apply scroll-m-20 my-2 text-lg font-semibold tracking-tight;
 	}
+}
+
+:root {
+	--ui-bg: var(--color-palette-baby-blue-500);
+}
+
+.dark {
+	--ui-bg: var(--color-palette-cornflower-500);
 }

@@ -9,10 +9,17 @@ export default defineNuxtConfig({
 				process.env.NUXT_PUBLIC_API_BASE || "http://localhost:8000",
 		},
 	},
-
+	app: {
+		head: {
+			link: [{ rel: "icon", type: "image/png", href: "/favicon.png" }],
+		},
+	},
 	css: ["~/assets/css/main.css"],
 	modules: ["@nuxt/ui"],
 	vite: {
 		plugins: [tailwindcss()],
 	},
 });
+
+
+// 0,71,63

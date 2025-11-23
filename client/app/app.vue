@@ -22,7 +22,7 @@ useHead({
 @reference "assets/css/main.css";
 
 * {
-	font-family: "Inter";
+	font-family: "Michroma";
 }
 
 .v-enter-active,
